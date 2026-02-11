@@ -1,4 +1,6 @@
-﻿namespace stock_finance_api.Models
+﻿using System;
+
+namespace stock_finance_api.Models
 {
     public class Comment
     {
