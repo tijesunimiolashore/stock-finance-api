@@ -1,4 +1,4 @@
-﻿using stock_finance_api.Dtos;
+﻿using stock_finance_api.Dtos.Stock;
 using stock_finance_api.Models;
 
 namespace stock_finance_api.Interfaces

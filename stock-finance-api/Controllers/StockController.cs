@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Data;
-using stock_finance_api.Dtos;
+using stock_finance_api.Dtos.Stock;
 using stock_finance_api.Interfaces;
 using stock_finance_api.Mappers;
 

@@ -1,4 +1,4 @@
-﻿namespace stock_finance_api.Dtos
+﻿namespace stock_finance_api.Dtos.Stock
 {
 	public class UpdateStockRequestDto
 	{
