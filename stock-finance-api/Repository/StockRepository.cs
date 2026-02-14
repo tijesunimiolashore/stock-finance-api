@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Data;
+using stock_finance_api.Dtos;
 using stock_finance_api.Interfaces;
+using stock_finance_api.Mappers;
 using stock_finance_api.Models;
 
 namespace stock_finance_api.Repository
@@ -13,9 +15,54 @@ namespace stock_finance_api.Repository
 		{
 			_context = context;
 		}
-		public Task<List<Stock>> GetAllAsync()
+
+		public async Task<Stock> CreateAsync(Stock stockModel)
 		{
-			return _context.Stocks.ToListAsync();
+			await _context.Stocks.AddAsync(stockModel);
+			await _context.SaveChangesAsync();
+			return stockModel;
+		}
+
+		public async Task<Stock?> DeleteAsync(int id)
+		{
+			var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+			if (stockModel == null)
+			{
+
+				return null;
+			}
+			_context.Stocks.Remove(stockModel);
+			await _context.SaveChangesAsync();
+			return stockModel;
+		}
+
+		public async Task<List<Stock>> GetAllAsync()
+		{
+			return await _context.Stocks.ToListAsync();
+		}
+
+		public async Task<Stock?> GetByIdAsync(int id)
+		{
+			return await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);	
+		}
+
+		public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stockDto)
+		{
+			var existingStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+			if (existingStock == null)
+			{
+				return null;
+			}
+			existingStock.Symbol = stockDto.Symbol;
+			existingStock.CompanyName = stockDto.CompanyName;
+			existingStock.Purchase = stockDto.Purchase;
+			existingStock.LastDiv = stockDto.LastDiv;
+			existingStock.Industry = stockDto.Industry;
+			existingStock.MarketCap = stockDto.MarketCap;
+
+			await _context.SaveChangesAsync();
+
+			return existingStock;
 		}
 	}
 }
