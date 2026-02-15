@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Data;
 using stock_finance_api.Dtos.Stock;
+using stock_finance_api.Helpers;
 using stock_finance_api.Interfaces;
 using stock_finance_api.Mappers;
 using stock_finance_api.Models;
@@ -36,9 +37,20 @@ namespace stock_finance_api.Repository
 			return stockModel;
 		}
 
-		public async Task<List<Stock>> GetAllAsync()
+		public async Task<List<Stock>> GetAllAsync(QueryObject query)
 		{
-			return await _context.Stocks.Include(c => c.Comments).ToListAsync();
+			var stocks = _context.Stocks.Include(c => c.Comments).AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(query.CompanyName))
+			{
+				stocks = stocks.Where(x => x.CompanyName.Contains(query.CompanyName));
+			}
+
+			if (!string.IsNullOrWhiteSpace(query.Symbol))
+			{
+				stocks = stocks.Where(x => x.Symbol.Contains(query.Symbol));
+			}
+			return await stocks.ToListAsync();
 		}
 
 		public async Task<Stock?> GetByIdAsync(int id)

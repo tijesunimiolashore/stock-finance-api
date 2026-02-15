@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using stock_finance_api.Data;
 using stock_finance_api.Dtos.Stock;
+using stock_finance_api.Helpers;
 using stock_finance_api.Interfaces;
 using stock_finance_api.Mappers;
 
@@ -20,12 +21,12 @@ namespace stock_finance_api.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> GetAll()
+		public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
 		{
 			if (!ModelState.IsValid)
 				return BadRequest(ModelState);
 
-			var stocks = await _stockRepo.GetAllAsync();
+			var stocks = await _stockRepo.GetAllAsync(query);
 
 			var stockDto = stocks.Select(s => s.ToStockDto());
 			return Ok(stocks);
