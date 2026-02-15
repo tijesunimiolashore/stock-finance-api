@@ -1,4 +1,5 @@
-﻿using stock_finance_api.Models;
+﻿using System.Threading.Tasks;
+using stock_finance_api.Models;
 
 namespace stock_finance_api.Interfaces
 {
@@ -11,5 +12,7 @@ namespace stock_finance_api.Interfaces
 		Task<Comment> CreateAsync(Comment commentModel);
 
 		Task<Comment?> UpdateAsync(int id, Comment commentModel);
+
+		Task<Comment?> DeleteAsync(int id);
 	}
 }
