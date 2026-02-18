@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ using stock_finance_api.Data;
 using stock_finance_api.Interfaces;
 using stock_finance_api.Models;
 using stock_finance_api.Repository;
+using stock_finance_api.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,13 +60,14 @@ builder.Services.AddAuthentication(options =>
 		ValidAudience = builder.Configuration["Jwt:Audience"],
 		ValidateIssuerSigningKey = true,
 		IssuerSigningKey = new SymmetricSecurityKey(
-			System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"])
+			Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"])
 		)
 	};
 });
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using stock_finance_api.Dtos.Account;
+using stock_finance_api.Interfaces;
 using stock_finance_api.Models;
 
 namespace stock_finance_api.Controllers
@@ -11,10 +12,12 @@ namespace stock_finance_api.Controllers
 	public class AccountController : ControllerBase
 	{
 		private readonly UserManager<AppUser> _userManager;
+		private readonly ITokenService _tokenService;
 
-		public AccountController(UserManager<AppUser> userManager)
+		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService)
 		{
 			_userManager = userManager;
+			_tokenService = tokenService;
 		}
 
 		[HttpPost("register")]
@@ -40,7 +43,14 @@ namespace stock_finance_api.Controllers
 
 					if (roleResult.Succeeded)
 					{
-						return Ok("User created");
+						return Ok(
+							new NewUserDto
+							{
+								UserName = appUser.UserName,
+								Email = appUser.Email,
+								Token = _tokenService.CreateToken(appUser)
+							}
+						);
 					}
 					else
 					{
