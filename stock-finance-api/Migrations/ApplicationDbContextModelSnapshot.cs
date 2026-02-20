@@ -51,13 +51,13 @@ namespace stock_finance_api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6692270d-b680-49c0-9473-292868b9dab2",
+                            Id = "da0ac653-df56-4368-a103-00ad4efd3dc6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1b28662e-246f-45b2-b78c-b3dd3413c405",
+                            Id = "f47c474e-9a70-4f04-9728-0947e1a8c144",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -263,6 +263,21 @@ namespace stock_finance_api.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("stock_finance_api.Models.Portfolio", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AppUserId", "StockId");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("Portfolio");
+                });
+
             modelBuilder.Entity("stock_finance_api.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -294,7 +309,7 @@ namespace stock_finance_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stocks");
+                    b.ToTable("Stock");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -357,9 +372,35 @@ namespace stock_finance_api.Migrations
                     b.Navigation("Stock");
                 });
 
+            modelBuilder.Entity("stock_finance_api.Models.Portfolio", b =>
+                {
+                    b.HasOne("stock_finance_api.Models.AppUser", "AppUser")
+                        .WithMany("Portfolios")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("stock_finance_api.Models.Stock", "Stock")
+                        .WithMany("Portfolios")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Stock");
+                });
+
+            modelBuilder.Entity("stock_finance_api.Models.AppUser", b =>
+                {
+                    b.Navigation("Portfolios");
+                });
+
             modelBuilder.Entity("stock_finance_api.Models.Stock", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Portfolios");
                 });
 #pragma warning restore 612, 618
         }
